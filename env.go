@@ -10,7 +10,7 @@ var (
 	s3BucketRegion    string
 	s3ObjectKeyPrefix string
 
-	cachePath string
+	localStoragePath string
 )
 
 func getEnvMust(key string) string {
@@ -21,13 +21,14 @@ func getEnvMust(key string) string {
 }
 
 func init() {
+	// aws_s3
 	s3BucketName = getEnvMust("S3_BUCKET_NAME")
 	s3BucketRegion = getEnvMust("S3_BUCKET_REGION")
 	s3ObjectKeyPrefix = getEnvMust("S3_OBJECT_KEY_PREFIX")
 
-	home, _ := os.UserHomeDir()
-	cachePath = home + "/.cache/s3_serve"
-	if _, err := os.Stat(cachePath); os.IsNotExist(err) {
-		_ = os.MkdirAll(cachePath, 0755)
+	// local_storage
+	localStoragePath = os.Getenv("LOCAL_STORAGE_PATH")
+	if _, err := os.Stat(localStoragePath); localStoragePath != "" && os.IsNotExist(err) {
+		_ = os.MkdirAll(localStoragePath, 0755)
 	}
 }
